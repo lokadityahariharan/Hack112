@@ -31,15 +31,18 @@ def onAppStart(app):
         'Y': 'Y.png',
         'Z': 'Z.png',
     }
-    app.textToTranslate = ''
+    app.textToTranslate = input("Enter text to translate into ASL: ")
     
 
-def translateToASL(app, text):
+def translateToASL(app):
+    text = input("Enter text to translate into ASL: ")
     asl_images = []
     for char in text.upper():
         if char in app.imageDict:
             asl_images.append(app.imageDict[char])
     return asl_images
+
+def showImages(app, images):
 
 
 cmu_graphics.run()
