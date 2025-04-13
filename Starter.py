@@ -1,11 +1,8 @@
 from cmu_graphics import *
+import cv2
 
 def onAppStart(app):
-    app.color = 'gray'
-    app.buttonOneX = app.width/2    
-    app.buttonTwoX = app.width/2
-    app.buttonOneY = 125
-    app.buttonTwoY = 275
+    app.color = 'gray'   
     app.insideBoxOne = False
     app.insideBoxTwo = False
     app.translateToASL = False
@@ -15,6 +12,7 @@ def onAppStart(app):
     app.stepCount = 0
     app.keys = set()
     app.backspaceHeld = False
+    app.showDash = False
 
 def onKeyPress(app, key):
     if app.translateToASL and (key.isalpha() or key.isspace()):
@@ -24,29 +22,31 @@ def onKeyPress(app, key):
             app.backspaceHeld = True
         else:
             app.text += key
+    if app.translateFromASL and key == 'd':
+        app.showDash = not app.showDash
 
 def onKeyRelease(app, key):
     if key == 'backspace':
         app.backspaceHeld = False
 
 def onMouseMove(app, mouseX, mouseY):
-    app.insideBoxOne = (app.buttonOneX - 100 < mouseX < app.buttonOneX + 100 and
-                      app.buttonOneY - 50 < mouseY < app.buttonOneY + 50)
-    app.insideBoxTwo = (app.buttonTwoX - 100 < mouseX < app.buttonTwoX + 100 and
-                      app.buttonTwoY - 50 < mouseY < app.buttonTwoY + 50)
+    app.insideBoxOne = (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+                      app.height*0.3125 - app.height/8 < mouseY < app.height*0.3125 + app.height/8)
+    app.insideBoxTwo = (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+                      app.height*0.6875 - app.height/8 < mouseY < app.height*0.6875 + app.height/8)
 def onStep(app):
     app.stepCount += 1
     if app.backspaceHeld and app.text != '':
         app.text = app.text[:-1]
 
 def onMousePress(app, mouseX, mouseY):
-    if (app.buttonOneX - 100 < mouseX < app.buttonOneX + 100 and
-        app.buttonOneY - 50 < mouseY < app.buttonOneY + 50):
+    if (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+        app.height*0.3125 - app.height/8 < mouseY < app.height*0.3125 + app.height/8):
         app.translateToASL = True
-    elif (app.buttonTwoX - 100 < mouseX < app.buttonTwoX + 100 and
-          app.buttonTwoY - 50 < mouseY < app.buttonTwoY + 50):
+    elif (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+          app.height*0.6875 - app.height/8 < mouseY < app.height*0.6875 + app.height/8):
         app.translateFromASL = True
-    elif (32.5 < mouseX < 102.5 and 340 < mouseY < 380):
+    elif (32.5 < mouseX < 102.5 and app.height-60 < mouseY < app.height-20):
         app.translateToASL = False
         app.translateFromASL = False
     
@@ -54,32 +54,52 @@ def drawFirstScreen(app):
     if not app.translateToASL and not app.translateFromASL:
         colorOne = 'black' if app.insideBoxOne else 'gray'
         colorTwo = 'black' if app.insideBoxTwo else 'gray'
-        drawLabel('ASL Translator', app.width/2, 30, size = 30, bold = True)
-        drawRect(app.buttonOneX, app.buttonOneY, 200, 100, fill = colorOne,
+        drawLabel('ASL Translator', app.width/2, app.width*0.07, size = app.width*0.075, bold = True)
+        drawRect(app.width/2, app.height*0.3125, app.width/2, app.height/4, fill = colorOne,
                 border='black',align='center', opacity = 50)
-        drawRect(app.buttonTwoX, app.buttonTwoY, 200, 100, fill = colorTwo,
+        drawRect(app.width/2, app.height*0.6875, app.width/2, app.height/4, fill = colorTwo,
                 border='black',align='center', opacity = 50)
-        drawLabel('Translate to ASL', app.buttonOneX, app.buttonOneY, bold = True, size = 20)
-        drawLabel('Translate from ASL', app.buttonTwoX, app.buttonTwoY, bold = True, size = 20)
+        drawLabel('Translate to ASL', app.width/2, app.height*0.3125, bold = True, size = app.width*0.05)
+        drawLabel('Translate from ASL', app.width/2, app.height*0.6875, bold = True, size = app.width*0.05)
 
 def drawTranslateToASL(app):
     if app.translateToASL:
-        lineX = 57 + 9.3 * len(app.text)
-        drawLabel('Translate to ASL', app.width/2, 30, size = 30, bold = True)
+        lineX = app.width*.1425 + 9.3 * len(app.text)
+        drawLabel('Translate to ASL', app.width/2, app.width*0.07, size = app.width*0.075, bold = True)
         drawRect(70, app.height - 40, 75, 40, fill = 'red', opacity = 75, align = 'center', border = 'black')
         drawLabel('Back', 70, app.height - 40, size = 20)
-        drawRect(200, 100, 300, 50, fill = None, border = 'black', align = 'center')
-        drawLabel(app.text, 56, 100, size = 20, align = 'left')
+        drawRect(app.width/2, app.height/4, app.width*0.75, app.height/8, fill = None, border = 'black', align = 'center')
+        drawLabel(app.text, app.width*0.14, app.height/4, size = app.width*0.05, align = 'left')
         if app.stepCount % 8 == 0:
-            drawLine(lineX, 80, lineX, 120)
+            drawLine(lineX, app.height*0.2, lineX, app.height*0.3)
+
+def drawTranslateFromASL(app):
+    if app.translateFromASL:
+        drawLabel('Translate from ASL', app.width/2, app.width*0.07, size = app.width*0.075, bold = True)
+        drawRect(70, app.height - 40, 75, 40, fill = 'red', opacity = 75, align = 'center', border = 'black')
+        drawLabel('Back', 70, app.height - 40, size = 20)
+        cap = cv2.VideoCapture(0)
+
+        while app.showDash:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Show the frame
+            cv2.imshow('Live Dashcam Feed', frame)
+
+            # Exit when 'd' is pressed
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
+        cv2.destroyAllWindows()
+
 
 def redrawAll(app):
     drawFirstScreen(app)
     drawTranslateToASL(app)
-    if app.translateFromASL:
-        drawLabel('Translate from ASL', app.width/2, 30, size = 30, bold = True)
-        drawRect(70, app.height - 40, 75, 40, fill = 'red', opacity = 75, align = 'center', border = 'black')
-        drawLabel('Back', 70, app.height - 40, size = 20)
+    drawTranslateFromASL(app)
 
 def main():
     runApp()
