@@ -43,6 +43,9 @@ def translateToASL(app):
     return asl_images
 
 def showImages(app, images):
-
+    for image in images:
+        img = Image(app.imageDict[image], x=app.width/2, y=app.height/2, width=50, height=50)
+        img.draw()
+        delay(1000)
 
 cmu_graphics.run()
