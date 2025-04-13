@@ -34,7 +34,7 @@ def onAppStart(app):
         'Z': 'Z.png',
     }
     app.stepsPerSecond = 1000
-    app.currIndex = False
+    app.currIndex = 0
 
     app.text = input("Enter text to translate into ASL: ")
     app.drawing = False
