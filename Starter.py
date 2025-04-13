@@ -22,8 +22,6 @@ def onKeyPress(app, key):
             app.backspaceHeld = True
         else:
             app.text += key
-    if app.translateFromASL and key == 'd':
-        app.showDash = not app.showDash
 
 def onKeyRelease(app, key):
     if key == 'backspace':
@@ -40,10 +38,10 @@ def onStep(app):
         app.text = app.text[:-1]
 
 def onMousePress(app, mouseX, mouseY):
-    if (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+    if (not app.translateFromASL and app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
         app.height*0.3125 - app.height/8 < mouseY < app.height*0.3125 + app.height/8):
         app.translateToASL = True
-    elif (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+    elif (not app.translateToASL and app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
           app.height*0.6875 - app.height/8 < mouseY < app.height*0.6875 + app.height/8):
         app.translateFromASL = True
     elif (32.5 < mouseX < 102.5 and app.height-60 < mouseY < app.height-20):
