@@ -1,6 +1,9 @@
 from cmu_graphics import *
+import time
 
-image_folder = #Insert the path to your image folder here
+image_folder = '/Users/veydpatil/Desktop/112 TP/ASL handlib/'
+
+
 
 def onAppStart(app):
     app.imageDict = {
@@ -31,21 +34,43 @@ def onAppStart(app):
         'Y': 'Y.png',
         'Z': 'Z.png',
     }
-    app.textToTranslate = input("Enter text to translate into ASL: ")
+    app.stepsPerSecond = 1000
+    app.currIndex = False
+
+    app.text = input("Enter text to translate into ASL: ")
+    app.drawing = False
+
+
+
+def onMousePress(app,mouseX,mouseY):
+    if app.currIndex >=len(app.text) - 1:
+        app.currIndex = 0
+    else:
+        app.currIndex += 1
+
     
 
 def translateToASL(app):
-    text = input("Enter text to translate into ASL: ")
     asl_images = []
-    for char in text.upper():
+    for char in app.text.upper():
         if char in app.imageDict:
             asl_images.append(app.imageDict[char])
     return asl_images
 
-def showImages(app, images):
-    for image in images:
-        img = Image(app.imageDict[image], x=app.width/2, y=app.height/2, width=50, height=50)
-        img.draw()
-        delay(1000)
+def showImages(app, imageList):
+    drawImage(image_folder + imageList[app.currIndex], app.width/2, 
+              app.height/2, width=100, height=100,align='center')
+        
 
+
+def redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='white')
+
+    images = translateToASL(app)
+    showImages(app, images)
+
+def main():
+    pass
+
+runApp()
 cmu_graphics.run()
