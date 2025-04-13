@@ -1,7 +1,6 @@
 from cmu_graphics import *
-import time
 
-image_folder = '/Users/veydpatil/Desktop/112 TP/ASL handlib/'
+image_folder = 'ASL handlib/'
 
 
 
