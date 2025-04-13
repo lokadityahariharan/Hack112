@@ -22,8 +22,6 @@ def onKeyPress(app, key):
             app.backspaceHeld = True
         else:
             app.text += key
-    if app.translateFromASL and key == 'd':
-        app.showDash = not app.showDash
 
 def onKeyRelease(app, key):
     if key == 'backspace':
@@ -40,10 +38,10 @@ def onStep(app):
         app.text = app.text[:-1]
 
 def onMousePress(app, mouseX, mouseY):
-    if (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+    if (not app.translateFromASL and app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
         app.height*0.3125 - app.height/8 < mouseY < app.height*0.3125 + app.height/8):
         app.translateToASL = True
-    elif (app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
+    elif (not app.translateToASL and app.width/2 - app.width/4 < mouseX < app.width/2 + app.width/4 and
           app.height*0.6875 - app.height/8 < mouseY < app.height*0.6875 + app.height/8):
         app.translateFromASL = True
     elif (32.5 < mouseX < 102.5 and app.height-60 < mouseY < app.height-20):
@@ -78,23 +76,7 @@ def drawTranslateFromASL(app):
         drawLabel('Translate from ASL', app.width/2, app.width*0.07, size = app.width*0.075, bold = True)
         drawRect(70, app.height - 40, 75, 40, fill = 'red', opacity = 75, align = 'center', border = 'black')
         drawLabel('Back', 70, app.height - 40, size = 20)
-        cap = cv2.VideoCapture(0)
-
-        while app.showDash:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # Show the frame
-            cv2.imshow('Live Dashcam Feed', frame)
-
-            # Exit when 'd' is pressed
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
-
+        
 
 def redrawAll(app):
     drawFirstScreen(app)
@@ -104,4 +86,5 @@ def redrawAll(app):
 def main():
     runApp()
 
-main()
+if __name__ == "__main__":
+    main()
