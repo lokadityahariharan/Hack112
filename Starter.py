@@ -78,23 +78,7 @@ def drawTranslateFromASL(app):
         drawLabel('Translate from ASL', app.width/2, app.width*0.07, size = app.width*0.075, bold = True)
         drawRect(70, app.height - 40, 75, 40, fill = 'red', opacity = 75, align = 'center', border = 'black')
         drawLabel('Back', 70, app.height - 40, size = 20)
-        cap = cv2.VideoCapture(0)
-
-        while app.showDash:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # Show the frame
-            cv2.imshow('Live Dashcam Feed', frame)
-
-            # Exit when 'd' is pressed
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
-
+        
 
 def redrawAll(app):
     drawFirstScreen(app)
@@ -104,4 +88,5 @@ def redrawAll(app):
 def main():
     runApp()
 
-main()
+if __name__ == "__main__":
+    main()

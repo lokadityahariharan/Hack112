@@ -5,8 +5,8 @@ import joblib
 
 # Step 1: Load the CSV
 data = pd.read_csv('asl_data.csv', header=None)
-#data = data.dropna()  # remove rows with any missing values
-#data.to_csv('asl_data_clean.csv', index=False, header=False)
+data = data.dropna()  # remove rows with any missing values
+data.to_csv('asl_data_clean.csv', index=False, header=False)
 
 # Step 2: Split features (X) and labels (y)
 X = data.iloc[:, :-1]  # first 63 columns = landmark features

@@ -45,7 +45,7 @@ while True:
             prediction = model.predict([norm])[0]
 
     if prediction:
-        cv2.putText(frame, f'Prediction: {prediction}', (10, 50), 
+        cv2.putText(img, f'Prediction: {prediction}', (10, 50), 
                     cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
 
     cv2.imshow("Hand Tracking", img)
