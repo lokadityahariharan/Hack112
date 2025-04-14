@@ -37,7 +37,7 @@ with open('asl_data.csv', 'a', newline='') as f:
                 norm = normalize_landmarks(landmarks)
 
                 key = cv2.waitKey(1)
-                if 97 <= key <= 122:  # A-Z
+                if 97 <= key <= 122 or key == 59:  # A-Z
                     label = chr(key)
                     writer.writerow(norm + [label])
                     print(f"Saved: {label}")

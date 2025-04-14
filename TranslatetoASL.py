@@ -33,25 +33,13 @@ def onAppStart(app):
         'Y': 'Y.png',
         'Z': 'Z.png',
     }
-    app.stepsPerSecond = 1000
-    app.currIndex = 0
 
-    app.text = input("Enter text to translate into ASL: ")
-    app.drawing = False
-
-
-
-def onMousePress(app,mouseX,mouseY):
-    if app.currIndex >=len(app.text) - 1:
-        app.currIndex = 0
-    else:
-        app.currIndex += 1
 
     
 
-def translateToASL(app):
+def createASL(app,text):
     asl_images = []
-    for char in app.text.upper():
+    for char in text.upper():
         if char in app.imageDict:
             asl_images.append(app.imageDict[char])
     return asl_images
@@ -62,14 +50,11 @@ def showImages(app, imageList):
         
 
 
-def redrawAll(app):
+def translateASL(app,text):
     drawRect(0, 0, app.width, app.height, fill='white')
 
-    images = translateToASL(app)
+    images = createASL(app,text)
     showImages(app, images)
-
-def main():
-    pass
 
 runApp()
 cmu_graphics.run()
